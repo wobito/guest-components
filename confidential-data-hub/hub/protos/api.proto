@@ -3,6 +3,8 @@ syntax = "proto3";
 package api;
 
 message UnsealSecretInput {
+    // The input `secret`` is in the following format
+    // `sealed`.`JWS header`.`JWS body (secret content)`.`signature`
     bytes secret = 1;
 }
 
@@ -19,12 +21,10 @@ message GetResourceResponse {
 }
 
 message SecureMountRequest {
-    string driver = 1;
-    repeated string driver_options = 2;
-    string source = 3;
-    string fstype = 4;
-    repeated string options = 5;
-    string mount_point = 6;
+    string volume_type = 1;
+    map<string, string> options = 2;
+    repeated string flags = 3;
+    string mount_point = 4;
 }
 
 message SecureMountResponse {

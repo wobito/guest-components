@@ -14,20 +14,21 @@ use protos::{
     },
     keyprovider_ttrpc::create_key_provider_service,
 };
-use server::Server;
 use tokio::{
     fs,
     signal::unix::{signal, SignalKind},
 };
 use ttrpc::r#async::Server as TtrpcServer;
+use ttrpc_server::Server;
 
 mod config;
+mod message;
 mod protos;
-mod server;
+mod ttrpc_server;
 
 use config::*;
 
-const DEFAULT_CONFIG_PATH: &str = "/etc/confidential-data-hub.toml";
+const DEFAULT_CONFIG_PATH: &str = "/etc/confidential-data-hub.conf";
 
 const UNIX_SOCKET_PREFIX: &str = "unix://";
 
@@ -38,7 +39,7 @@ const VERSION: &str = include_str!(concat!(env!("OUT_DIR"), "/version"));
 struct Cli {
     /// Path to the config  file
     ///
-    /// `--config /etc/confidential-data-hub.toml`
+    /// `--config /etc/confidential-data-hub.conf`
     #[arg(short)]
     config: Option<String>,
 }
@@ -98,7 +99,7 @@ async fn main() -> Result<()> {
         .register_service(key_provider_service);
 
     info!(
-        "Confidential Data Hub starts to listen to request: {}",
+        "[ttRPC] Confidential Data Hub starts to listen to request: {}",
         config.socket
     );
     server.start().await?;
