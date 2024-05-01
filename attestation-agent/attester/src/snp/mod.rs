@@ -45,6 +45,11 @@ impl Attester for SnpAttester {
             .get_ext_report(None, Some(data), Some(0))
             .context("Failed to get attestation report")?;
 
+        let certs = match certs {
+            Some(c) => c,
+            None => bail!("Certificate chain was not provided"),
+        };
+
         let evidence = SnpEvidence {
             attestation_report: report,
             cert_chain: certs,
