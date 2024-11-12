@@ -11,6 +11,7 @@ pub mod decoder;
 pub mod decrypt;
 pub mod digest;
 pub mod image;
+pub mod imageinfo;
 pub mod meta_store;
 #[cfg(feature = "nydus")]
 pub mod nydus;

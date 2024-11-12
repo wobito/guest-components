@@ -17,6 +17,7 @@ use tokio::sync::RwLock;
 use crate::bundle::{create_runtime_config, BUNDLE_ROOTFS};
 use crate::config::{ImageConfig, CONFIGURATION_FILE_NAME, DEFAULT_WORK_DIR};
 use crate::decoder::Compression;
+use crate::imageinfo;
 use crate::meta_store::{MetaStore, METAFILE};
 use crate::pull::PullClient;
 use crate::snapshots::{SnapshotType, Snapshotter};
@@ -240,6 +241,8 @@ impl ImageClient {
             self.config.max_concurrent_download,
         )?;
         let (image_manifest, image_digest, image_config) = client.pull_manifest().await?;
+
+        let _ = imageinfo::send_image_info(image_url, &image_digest).await?;
 
         let id = image_manifest.config.digest.clone();
 
